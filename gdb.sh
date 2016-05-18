@@ -7,7 +7,10 @@ INST=$TOP/install
 LOG=$TOP/log
 PROG=gdb
 TARGET=ubi32-elf-gnu
-PATH=/usr/local/bin:/usr/bin:/usr/local/sbin
+NAME=ubi32-elf
+GCCPATH=/opt/gnu/bin
+PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+
 
 echo " "
 echo "Building GDB"
@@ -42,6 +45,7 @@ rm -f $LOG/$PROG*.log
 echo -n "Configuring gdb"
 $SRC/$PROG/configure --prefix $INST	\
 	--target=$TARGET		\
+	--program-prefix=ubi32-elf-	\
 	>& $LOG/$PROG-configure.log 
 rc=$?
 check_rc $rc 
