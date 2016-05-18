@@ -1,3 +1,13 @@
+*.swp
 build
 install
 log
+binutils-cpu
+binutils-cvs
+cgen-old
+opcodes-old
+partially-ported
+cgen-save
+save
+results
+patches
