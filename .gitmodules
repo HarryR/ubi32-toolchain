@@ -1,0 +1,3 @@
+[submodule "src/qemu"]
+	path = src/qemu
+	url = https://source.codeaurora.org/external/ubicom/ubicom32-qemu
