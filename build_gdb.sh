@@ -51,19 +51,19 @@ $SRC/$PROG/configure --prefix $INST	\
 	--program-prefix=ubi32-elf-	\
 	--with-python=auto		\
 	--with-sysroot=$SYSROOT 	\
-	>& $LOG/$PROG-configure.log 
+	>& $LOG/$PROG-configure.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo -n "Building gdb"
-make CFLAGS=-ggdb all-gdb >& $LOG/$PROG-make.log 
+make CFLAGS=-ggdb all-gdb >& $LOG/$PROG-make.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo -n "Installing gdb"
 make install-gdb >& $LOG/$PROG-install.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo " "
 echo -n "Finish: "

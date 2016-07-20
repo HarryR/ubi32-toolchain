@@ -20,7 +20,7 @@ QEMUDIR=$ROOTDIR/install
 PATH=$RELDIR/bin:$QEMUDIR/bin:$PATH
 RESULTSDIR=$ROOTDIR/results
 RESULTS=$RESULTSDIR/gdb/$DATE
- 
+
 SYSROOT=/home/eager/gnu/opensuse-11.2-64-sysroot
 export LD_LIBRARY_PATH=/usr/lib:/usr/lib64:$SYSROOT/usr/lib:$SYSROOT/usr/lib64
 

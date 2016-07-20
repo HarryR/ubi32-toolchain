@@ -43,19 +43,19 @@ echo -n "Configuring binutils"
 $SRC/$PROG/configure --prefix $INST	\
 	--target=$TARGET		\
 	--enable-cgen-maint		\
-	>& $LOG/$PROG-configure.log 
+	>& $LOG/$PROG-configure.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo -n "Building binutils"
-make all-binutils >& $LOG/$PROG-make.log 
+make all-binutils >& $LOG/$PROG-make.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo -n "Installing binutils"
 make install-binutils >& $LOG/$PROG-install.log
 rc=$?
-check_rc $rc 
+check_rc $rc
 
 echo " "
 echo -n "Finish: "

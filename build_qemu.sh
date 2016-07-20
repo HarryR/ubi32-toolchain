@@ -36,7 +36,7 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --enable-debug			\
 		  --sysroot=/home/eager/gnu/opensuse-11.2-64-sysroot	\
 		  --target-list="$TARGET_LIST" 		\
-			> $LOG/configure.log 2>&1 
+			> $LOG/configure.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
