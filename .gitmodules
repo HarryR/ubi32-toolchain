@@ -4,3 +4,6 @@
 [submodule "src/binutils-gdb"]
 	path = src/binutils-gdb
 	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
+[submodule "src/cgen"]
+	path = src/cgen
+	url = https://source.codeaurora.org/external/ubicom/ubicom32-cgen
