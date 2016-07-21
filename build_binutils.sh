@@ -8,7 +8,7 @@ LOG=$TOP/log
 PROG=binutils
 TARGET=ubi32-elf-gnu
 GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin
+PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
 
 echo " "
 echo "Building Binutils"
@@ -34,10 +34,12 @@ function check_rc
 
 mkdir -p $INST $LOG
 
+which rm
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 
+which rm
 rm -f $LOG/$PROG*.log
 
 echo -n "Configuring binutils"
