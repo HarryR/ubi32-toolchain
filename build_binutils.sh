@@ -34,12 +34,10 @@ function check_rc
 
 mkdir -p $INST $LOG
 
-which rm
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 
-which rm
 rm -f $LOG/$PROG*.log
 
 echo -n "Configuring binutils"
