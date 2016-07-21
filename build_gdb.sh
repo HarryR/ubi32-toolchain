@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src
+SRC=$TOP/src/binutils-gdb
 BLD=$TOP/build
 INST=$TOP/install
 LOG=$TOP/log
@@ -16,7 +16,7 @@ SYSROOT=/home/eager/gnu/opensuse-11.2-64-sysroot
 echo " "
 echo "Building GDB"
 echo "Target:  $TARGET"
-echo "Source:  $SRC/$PROG"
+echo "Source:  $SRC"
 echo "Build:   $BLD"
 echo "Install: $INST"
 echo "Log:     $LOG"
@@ -46,7 +46,7 @@ rm -f $LOG/$PROG*.log
 #export LD_LIBRARY_PATH=$SYSROOT/usr/lib:$SYSROOT/usr/lib64
 
 echo -n "Configuring gdb"
-$SRC/$PROG/configure --prefix $INST	\
+$SRC/configure --prefix $INST	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
 	--with-python=auto		\
