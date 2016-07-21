@@ -1,18 +1,19 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src
+SRC=$TOP/src/binutils-gdb
 BLD=$TOP/build
 INST=$TOP/install
 LOG=$TOP/log
 PROG=binutils
 TARGET=ubi32-elf-gnu
-PATH=/usr/local/bin:/usr/bin:/usr/local/sbin
+GCCPATH=/opt/gnu/bin
+PATH=$GCCPATH:/usr/local/bin:/usr/bin
 
 echo " "
 echo "Building Binutils"
 echo "Target:  $TARGET"
-echo "Source:  $SRC/$PROG"
+echo "Source:  $SRC"
 echo "Build:   $BLD"
 echo "Install: $INST"
 echo "Log:     $LOG"
@@ -40,7 +41,7 @@ cd $BLD/$PROG
 rm -f $LOG/$PROG*.log
 
 echo -n "Configuring binutils"
-$SRC/$PROG/configure --prefix $INST	\
+$SRC/configure --prefix $INST	\
 	--target=$TARGET		\
 	--enable-cgen-maint		\
 	>& $LOG/$PROG-configure.log
