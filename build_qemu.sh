@@ -4,16 +4,17 @@ PWD=`pwd`
 BUILD=$PWD/build/qemu
 SOURCE=$PWD/src/qemu
 INSTALL=$PWD/install
-LOG=$PWD/build/qemu/log
+LOG=$PWD/log
+PROG=qemu
 
 GCCPATH=/opt/gnu/bin
 PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
 
 TARGET_LIST="ubicom32-softmmu ubicom32el-softmmu"
 
-rm -rf $BUILD $LOG
-
 mkdir -p $BUILD $LOG
+
+rm -f $LOG/$PROG*.log
 
 echo " "
 echo "======================="
@@ -36,17 +37,17 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --enable-debug			\
 		  --sysroot=/home/eager/gnu/opensuse-11.2-64-sysroot	\
 		  --target-list="$TARGET_LIST" 		\
-			> $LOG/configure.log 2>&1
+			> $LOG/$PROG-configure.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
 echo "  Building QEMU"
-make V=1 CFLAGS=-g > $LOG/build.log 2>&1
+make V=1 CFLAGS=-g > $LOG/$PROG-build.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
 echo "  Installing QEMU"
-make V=1 CFLAGS=-g install > $LOG/install.log 2>&1
+make V=1 CFLAGS=-g install > $LOG/$PROG-install.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
