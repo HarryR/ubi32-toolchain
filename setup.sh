@@ -1,2 +1,2 @@
-COMPILER=/zfs/qualcomm/qualcomm-toolchain/release/bin
+COMPILER=../ubicom32-toolchain/release/bin
 PATH=$(pwd)/install/bin:$COMPILER:$PATH
