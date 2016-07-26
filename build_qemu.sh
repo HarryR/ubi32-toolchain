@@ -35,7 +35,6 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
 		  --enable-debug			\
-		  --sysroot=/home/eager/gnu/opensuse-11.2-64-sysroot	\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
 rc=$?

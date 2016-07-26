@@ -10,7 +10,6 @@ TARGET=ubi32-elf-gnu
 NAME=ubi32-elf
 GCCPATH=/opt/gnu/bin
 PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
-SYSROOT=/home/eager/gnu/opensuse-11.2-64-sysroot
 
 
 echo " "
@@ -43,14 +42,11 @@ cd $BLD/$PROG
 
 rm -f $LOG/$PROG*.log
 
-#export LD_LIBRARY_PATH=$SYSROOT/usr/lib:$SYSROOT/usr/lib64
-
 echo -n "Configuring gdb"
 $SRC/configure --prefix $INST	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
 	--with-python=auto		\
-	--with-sysroot=$SYSROOT 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
