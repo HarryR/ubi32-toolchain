@@ -11,7 +11,7 @@ TEST=${1:--directory=gdb.base}
 
 ROOTDIR=`pwd`
 TOOLDIR=$ROOTDIR/../ubicom32-toolchain
-DATE=$(date +%Y-%m-%d)
+DATE=$(date +%Y-%m-%d-%H-%M)
 SRCDIR=$ROOTDIR/src
 BLDDIR=$ROOTDIR/build
 GDB=$BLDDIR/gdb
