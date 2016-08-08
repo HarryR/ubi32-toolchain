@@ -1,2 +1,2 @@
-COMPILER=../ubicom32-toolchain/release/bin
+COMPILER=$(realpath ../ubicom32-toolchain/release/bin)
 PATH=$(pwd)/install/bin:$COMPILER:$PATH
