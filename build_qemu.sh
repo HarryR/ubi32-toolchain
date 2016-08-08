@@ -23,6 +23,7 @@ echo "  Building QEMU"
 echo " "
 echo "  SOURCE=$SOURCE"
 echo "  INSTALL=$INSTALL"
+echo "  PATH=$PATH"
 echo "  LOG=$LOG"
 echo " "
 echo -n "  "
@@ -35,6 +36,7 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
 		  --enable-debug			\
+		  --sysroot=$SYSROOT			\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
 rc=$?
