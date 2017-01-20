@@ -10,7 +10,8 @@ PROG=qemu
 GCCPATH=/opt/gnu/bin
 PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
 
-TARGET_LIST="ubicom32-softmmu ubicom32el-softmmu"
+TARGET_LIST="cris-softmmu,mipsel-softmmu,arm-softmmu"
+TARGET_LIST+=",ubicom32-softmmu,ubicom32el-softmmu"
 
 mkdir -p $BUILD $LOG
 
@@ -36,6 +37,8 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
 		  --enable-debug			\
+		  --extra-cflags=-fPIC			\
+		  --disable-strip			\
 		  --sysroot=$SYSROOT			\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
@@ -47,8 +50,14 @@ make V=1 CFLAGS=-g > $LOG/$PROG-build.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
+echo "  Building QEMU-LTMU"
+make V=1 CFLAGS=-g tlmu > $LOG/$PROG-tlmu-build.log 2>&1
+rc=$?
+if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
+
 echo "  Installing QEMU"
 make V=1 CFLAGS=-g install > $LOG/$PROG-install.log 2>&1
+make V=1 CFLAGS=-g install-tlmu DESTDIR=$INSTALL > $LOG/$PROG-install.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
