@@ -1,13 +1,5 @@
 *.swp
-build
-install
-log
-binutils-cpu
-binutils-cvs
-cgen-old
-opcodes-old
-partially-ported
-cgen-save
-save
+build*
+install*
+log*
 results
-patches
