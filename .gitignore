@@ -1,7 +1,7 @@
 *.swp
-build
-install
-log
+build*
+install*
+log*
 binutils-cpu
 binutils-cvs
 cgen-old
