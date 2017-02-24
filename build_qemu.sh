@@ -6,6 +6,7 @@ SOURCE=$PWD/src/qemu
 INSTALL=$PWD/install
 LOG=$PWD/log
 PROG=qemu
+DATE=$(date +%Y-%m-%d)
 
 GCCPATH=/opt/gnu/bin
 PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
@@ -33,6 +34,7 @@ echo " "
 echo "  Configuring QEMU"
 cd $BUILD
 $SOURCE/configure --prefix=$INSTALL 			\
+		  --with-pkgversion="$DATE" 		\
 		  --disable-curl 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
