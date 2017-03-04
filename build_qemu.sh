@@ -38,6 +38,17 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-curl 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
+		  --disable-sdl				\
+		  --disable-virtfs			\
+		  --disable-vnc				\
+		  --disable-slirp			\
+		  --disable-uuid			\
+		  --disable-vde				\
+		  --disable-spice			\
+		  --disable-usb-redir			\
+		  --disable-smartcard			\
+		  --disable-seccomp			\
+		  --enable-tlmu				\
 		  --enable-debug			\
 		  --extra-cflags=-fPIC			\
 		  --disable-strip			\
@@ -52,14 +63,8 @@ make V=1 CFLAGS=-g > $LOG/$PROG-build.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
-echo "  Building QEMU-LTMU"
-make V=1 CFLAGS=-g tlmu > $LOG/$PROG-tlmu-build.log 2>&1
-rc=$?
-if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
-
 echo "  Installing QEMU"
 make V=1 CFLAGS=-g install > $LOG/$PROG-install.log 2>&1
-make V=1 CFLAGS=-g install-tlmu DESTDIR=$INSTALL > $LOG/$PROG-install.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
