@@ -36,6 +36,7 @@ cd $BUILD
 $SOURCE/configure --prefix=$INSTALL 			\
 		  --with-pkgversion="$DATE" 		\
 		  --disable-curl 			\
+		  --disable-vnc 			\
 		  --disable-vnc-tls 			\
 		  --disable-pie				\
 		  --disable-sdl				\
@@ -48,10 +49,10 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-usb-redir			\
 		  --disable-smartcard			\
 		  --disable-seccomp			\
-		  --enable-tlmu				\
 		  --enable-debug			\
-		  --extra-cflags=-fPIC			\
 		  --disable-strip			\
+		  --enable-tlmu				\
+		  --enable-archrefcompare		\
 		  --sysroot=$SYSROOT			\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
