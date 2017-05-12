@@ -11,7 +11,7 @@ DATE=$(date +%Y-%m-%d)
 GCCPATH=/opt/gnu/bin
 PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
 
-TARGET_LIST="cris-softmmu,mipsel-softmmu,arm-softmmu"
+TARGET_LIST="arm-softmmu"
 TARGET_LIST+=",ubicom32-softmmu,ubicom32el-softmmu"
 
 mkdir -p $BUILD $LOG
