@@ -8,8 +8,11 @@ LOG=$TOP/log
 PROG=gdb
 TARGET=ubi32-elf-gnu
 NAME=ubi32-elf
-GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/bin:/usr/bin:/bin
+if [ -n "$GCC_PATH" ] ; then
+  PATH=$GCC_PATH:$PATH
+fi
+DATE=$(date +%Y-%m-%d)
 
 
 echo " "
@@ -43,7 +46,8 @@ cd $BLD/$PROG
 rm -f $LOG/$PROG*.log
 
 echo -n "Configuring gdb"
-$SRC/configure --prefix $INST	\
+$SRC/configure --prefix $INST		\
+	--with-pkgversion="$DATE" 	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
 	--with-python=auto		\

@@ -7,8 +7,11 @@ INST=$TOP/install
 LOG=$TOP/log
 PROG=binutils
 TARGET=ubi32-elf-gnu
-GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/bin:/usr/bin:/bin
+if [ -n "$GCC_PATH" ] ; then
+  PATH=$GCC_PATH:$PATH
+fi
+DATE=$(date +%Y-%m-%d)
 
 echo " "
 echo "Building Binutils"
@@ -43,6 +46,7 @@ rm -f $LOG/$PROG*.log
 echo -n "Configuring binutils"
 $SRC/configure --prefix $INST	\
 	--target=$TARGET		\
+	--with-pkgversion="$DATE" 	\
 	--enable-cgen-maint		\
 	>& $LOG/$PROG-configure.log
 rc=$?
