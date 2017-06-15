@@ -8,8 +8,10 @@ LOG=$TOP/log
 PROG=gdb
 TARGET=ubi32-elf-gnu
 NAME=ubi32-elf
-GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/bin:/usr/bin:/bin
+if [ -n "$GCC_PATH" ] ; then
+  PATH=$GCC_PATH:$PATH
+fi
 DATE=$(date +%Y-%m-%d)
 
 

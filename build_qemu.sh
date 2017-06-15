@@ -8,8 +8,10 @@ LOG=$PWD/log
 PROG=qemu
 DATE=$(date +%Y-%m-%d)
 
-GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/bin:/usr/bin:/bin
+if [ -n "$GCC_PATH" ] ; then
+  PATH=$GCC_PATH:$PATH
+fi
 
 TARGET_LIST="arm-softmmu"
 TARGET_LIST+=",ubicom32-softmmu,ubicom32el-softmmu"
