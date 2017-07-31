@@ -13,8 +13,7 @@ if [ -n "$GCC_PATH" ] ; then
   PATH=$GCC_PATH:$PATH
 fi
 
-TARGET_LIST="arm-softmmu"
-TARGET_LIST+=",ubicom32-softmmu,ubicom32el-softmmu"
+TARGET_LIST+="ubicom32-softmmu,ubicom32el-softmmu"
 
 mkdir -p $BUILD $LOG
 
