@@ -5,10 +5,14 @@
 	path = src/qemu
 	url = https://source.codeaurora.org/external/ubicom/ubi32-qemu
 	branch = ubi32
-[submodule "src/binutils-gdb"]
-	path = src/binutils-gdb
+[submodule "src/binutils"]
+	path = src/binutils
 	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
-	branch = ubi32
+	branch = ubi32-binutils
+[submodule "src/gdb"]
+	path = src/gdb
+	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
+	branch = ubi32-gdb
 [submodule "src/cgen"]
 	path = src/cgen
 	url = https://source.codeaurora.org/external/ubicom/ubi32-cgen
