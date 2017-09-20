@@ -1,6 +1,7 @@
 *.swp
 build*
 install*
+release*
 log*
 save
 results
