@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src/binutils-gdb
+SRC=$TOP/src/gdb
 BLD=$TOP/build
 INST=$TOP/install
 LOG=$TOP/log
