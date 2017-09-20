@@ -8,6 +8,7 @@ cgen-old
 opcodes-old
 partially-ported
 cgen-save
+release*
+log*
 save
 results
-patches

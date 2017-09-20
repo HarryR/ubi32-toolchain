@@ -1,14 +1,17 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src/binutils-gdb
+SRC=$TOP/src/binutils
 BLD=$TOP/build
-INST=$TOP/install
+INST=$TOP/release
 LOG=$TOP/log
 PROG=binutils
 TARGET=ubi32-elf-gnu
-GCCPATH=/opt/gnu/bin
-PATH=$GCCPATH:/usr/local/bin:/usr/bin:/bin
+PATH=/usr/local/bin:/usr/bin:/bin
+if [ -n "$GCC_PATH" ] ; then
+  PATH=$GCC_PATH:$PATH
+fi
+DATE=$(date +%Y-%m-%d)
 
 echo " "
 echo "Building Binutils"
@@ -43,20 +46,24 @@ rm -f $LOG/$PROG*.log
 echo -n "Configuring binutils"
 $SRC/configure --prefix $INST	\
 	--target=$TARGET		\
-	--enable-cgen-maint		\
+	--program-prefix=ubicom32-elf-	\
+	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
 echo -n "Building binutils"
-make all-binutils >& $LOG/$PROG-make.log
+make all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
 echo -n "Installing binutils"
-make install-binutils >& $LOG/$PROG-install.log
+make install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
+
+# Rename target directory
+mv $INST/ubi32-elf-gnu $INST/ubicom32-elf
 
 echo " "
 echo -n "Finish: "
