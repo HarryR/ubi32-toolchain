@@ -52,8 +52,6 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-seccomp			\
 		  --enable-debug			\
 		  --disable-strip			\
-		  --enable-tlmu				\
-		  --enable-archrefcompare		\
 		  --sysroot=$SYSROOT			\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
