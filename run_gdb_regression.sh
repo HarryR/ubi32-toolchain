@@ -1,12 +1,5 @@
 #!/bin/bash
 
-
-echo ""
-echo "Run GDB Regression Test for Ubicom32"
-echo ""
-date
-echo ""
-
 TEST=${1:--directory=gdb.base}
 
 ROOTDIR=`pwd`
@@ -23,6 +16,17 @@ RESULTSDIR=$ROOTDIR/results
 RESULTS=$RESULTSDIR/gdb/$DATE
 
 export DEJAGNULIBS=$TOOLDIR/src/dejagnu
+
+if [ ! -d $GDB ]; then
+  echo "ERROR: Build GDB before running regression tests"
+  exit 1
+fi
+
+echo ""
+echo "Run GDB Regression Test for Ubicom32"
+echo ""
+date
+echo ""
 
 echo "Creating results directory $RESULTS"
 rm -rf $RESULTS
