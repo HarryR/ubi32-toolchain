@@ -6,7 +6,7 @@ SOURCE=$TOP/src/qemu
 INSTALL=$TOP/install
 LOG=$TOP/log
 PROG=qemu
-TARGET_LIST+="ubicom32-softmmu,ubicom32el-softmmu"
+TARGET_LIST="ubicom32-softmmu,ubicom32el-softmmu"
 DATE=$(date +%Y-%m-%d)
 
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -58,6 +58,8 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --disable-usb-redir			\
 		  --disable-smartcard			\
 		  --disable-seccomp			\
+		  --enable-tlmu				\
+		  --enable-archrefcompare		\
 		  --enable-debug			\
 		  --disable-strip			\
 		  --sysroot=$SYSROOT			\
