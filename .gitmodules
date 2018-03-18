@@ -13,7 +13,3 @@
 	path = src/gdb
 	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
 	branch = ubi32-gdb
-[submodule "src/cgen"]
-	path = src/cgen
-	url = https://source.codeaurora.org/external/ubicom/ubi32-cgen
-	branch = ubi32
