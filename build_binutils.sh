@@ -49,7 +49,7 @@ function check_rc
 #rm -rf $INST
 mkdir -p $INST $LOG
 
-echo "  Removing $BLD/$PROB"
+echo "  Removing $BLD/$PROG"
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
