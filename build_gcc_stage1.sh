@@ -1,12 +1,11 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src/binutils
+SRC=$TOP/src/gcc
 BLD=$TOP/build
-INSTALL=$TOP/release
 INSTALL=$TOP/install
 LOG=$TOP/log
-PROG=binutils
+PROG=gcc
 TARGET=ubi32-none-elf
 DATE=$(date +%Y-%m-%d)
 
@@ -14,11 +13,12 @@ PATH=/usr/local/bin:/usr/bin:/bin
 if [ -n "$GCC_PATH" ] ; then
   PATH=$GCC_PATH:$PATH
 fi
+PATH=$INSTALL/bin:$PATH
 
 echo " "
 echo "======================="
 echo " "
-echo "Building Binutils"
+echo "Building GCC"
 echo " "
 date
 echo " "
@@ -31,8 +31,10 @@ echo "PATH:    $PATH"
 echo " "
 
 CFLAGS="-O2 -g"
+CXXFLAGS="-O2 -g"
 if [ "x$1" == "xdebug" ]; then
   CFLAGS="-g"
+  CXXFLAGS="-g"
   echo "  Building debug version"
 fi
 
@@ -58,28 +60,41 @@ echo " "
 
 rm -f $LOG/$PROG*.log
 
-echo -n "  Configuring binutils"
+echo -n "  Configuring gcc stage 1"
 $SRC/configure --prefix $INSTALL	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
+	--disable-multilib		\
+	--disable-libssp 		\
+	--disable-libsanitizer 		\
+	--disable-tls 			\
+	--disable-libmudflap 		\
+	--disable-threads 		\
+	--disable-libquadmath 		\
+	--disable-libgomp 		\
+	--without-isl 			\
+	--without-cloog 		\
+	--disable-decimal-float 	\
+	--enable-languages=c 		\
+	--without-headers 		\
+	--without-newlib		\
+	--disable-largefile 		\
+	--disable-nls 			\
+	--enable-checking=yes		\
 	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
-echo -n "  Building binutils"
-make "CFLAGS=$CFLAGS" all >& $LOG/$PROG-make.log
+echo -n "  Building gcc stage 1"
+make "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
-echo -n "  Installing binutils"
-make "CFLAGS=$CFLAGS" install >& $LOG/$PROG-install.log
+echo -n "  Installing gcc stage 1"
+make "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
-
-# Rename target directory
-#rm -rf $INSTALL/ubicom32-elf
-#cp -r $INSTALL/ubi32-elf-gnu $INSTALL/ubicom32-elf
 
 echo " "
 echo -n "Finish: "

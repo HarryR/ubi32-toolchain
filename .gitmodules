@@ -3,13 +3,17 @@
 
 [submodule "src/qemu"]
 	path = src/qemu
-	url = https://source.codeaurora.org/external/ubicom/ubi32-qemu
+	url = git@git.codeaurora.org:/external/ubicom/ubi32-qemu
 	branch = ubi32
 [submodule "src/binutils"]
 	path = src/binutils
-	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
+	url = git@git.codeaurora.org:/external/ubicom/ubi32-binutils-gdb
 	branch = ubi32-binutils
 [submodule "src/gdb"]
 	path = src/gdb
-	url = https://source.codeaurora.org/external/ubicom/ubi32-binutils-gdb
+	url = git@git.codeaurora.org:/external/ubicom/ubi32-binutils-gdb
 	branch = ubi32-gdb
+[submodule "src/gcc"]
+	path = src/gcc
+	url = git@git.codeaurora.org:/external/ubicom/ubi32-gcc
+	branch = ubi32

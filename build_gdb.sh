@@ -3,10 +3,10 @@
 TOP=`pwd`
 SRC=$TOP/src/gdb
 BLD=$TOP/build
-INST=$TOP/install
+INSTALL=$TOP/install
 LOG=$TOP/log
 PROG=gdb
-TARGET=ubi32-elf-gnu
+TARGET=ubi32-none-elf
 NAME=ubi32-elf
 PATH=/usr/local/bin:/usr/bin:/bin
 if [ -n "$GCC_PATH" ] ; then
@@ -20,7 +20,7 @@ echo "Building GDB"
 echo "Target:  $TARGET"
 echo "Source:  $SRC"
 echo "Build:   $BLD"
-echo "Install: $INST"
+echo "Install: $INSTALL"
 echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
@@ -37,7 +37,7 @@ function check_rc
   fi
 }
 
-mkdir -p $INST $LOG
+mkdir -p $INSTALL $LOG
 
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
@@ -46,7 +46,7 @@ cd $BLD/$PROG
 rm -f $LOG/$PROG*.log
 
 echo -n "Configuring gdb"
-$SRC/configure --prefix $INST		\
+$SRC/configure --prefix $INSTALL		\
 	--with-pkgversion="$DATE" 	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
