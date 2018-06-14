@@ -1,24 +1,25 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src/gdb
+SRC=$TOP/src/newlib
 BLD=$TOP/build
 INSTALL=$TOP/install
 LOG=$TOP/log
-PROG=gdb
+PROG=newlib
 TARGET=ubi32-none-elf
-NAME=ubi32-elf
+PREFIX=ubi32-elf
+DATE=$(date +%Y-%m-%d)
+
 PATH=/usr/local/bin:/usr/bin:/bin
 if [ -n "$GCC_PATH" ] ; then
   PATH=$GCC_PATH:$PATH
 fi
-DATE=$(date +%Y-%m-%d)
-
+PATH=$INSTALL/bin:$PATH
 
 echo " "
 echo "======================="
 echo " "
-echo "Building GDB"
+echo "Building NEWLIB"
 echo " "
 date
 echo " "
@@ -29,13 +30,21 @@ echo "Install: $INSTALL"
 echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
-echo -n "Start: "
+
+export AR_FOR_TARGET=${PREFIX}-ar
+export RANLIB_FOR_TARGET=${PREFIX}-ranlib
+export AS_FOR_TARGET=${PREFIX}-as
+export CC_FOR_TARGET=${PREFIX}-gcc
+export CXX_FOR_TARGET=${PREFIX}-g++
 
 CFLAGS="-O2 -g"
+CXXFLAGS="-O2 -g"
 if [ "x$1" == "xdebug" ]; then
   CFLAGS="-g"
+  CXXFLAGS="-g"
   echo "  Building debug version"
 fi
+
 
 function check_rc
 {
@@ -47,32 +56,37 @@ function check_rc
   fi
 }
 
+#rm -rf $INSTALL
 mkdir -p $INSTALL $LOG
 
 echo "  Removing $BLD/$PROG"
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
+echo " "
 
-rm -f $LOG/$PROG*.log
+export CFLAGS_FOR_TARGET="-g -O0"
+export CFLAGS_FOR_BUILD="-g -O0"
 
-echo -n "  Configuring gdb"
+rm -f $LOG/$PROG-*.log
+
+echo -n "  Configuring Newlib"
 $SRC/configure --prefix $INSTALL	\
-	--with-pkgversion="$DATE" 	\
 	--target=$TARGET		\
-	--program-prefix=ubi32-elf-	\
-	--with-python=auto		\
+	--enable-multilib		\
+	--disable-nls 			\
+	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
-echo -n "  Building gdb"
-make -j4 CFLAGS=-ggdb all-gdb >& $LOG/$PROG-make.log
+echo -n "  Building Newlib"
+make -j4 "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
-echo -n "  Installing gdb"
-make -j4 install-gdb >& $LOG/$PROG-install.log
+echo -n "  Installing Newlib"
+make "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
 

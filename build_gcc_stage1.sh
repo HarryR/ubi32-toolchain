@@ -5,8 +5,9 @@ SRC=$TOP/src/gcc
 BLD=$TOP/build
 INSTALL=$TOP/install
 LOG=$TOP/log
-PROG=gcc
+PROG=gcc_stage1
 TARGET=ubi32-none-elf
+PREFIX=ubi32-elf
 DATE=$(date +%Y-%m-%d)
 
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -18,7 +19,7 @@ PATH=$INSTALL/bin:$PATH
 echo " "
 echo "======================="
 echo " "
-echo "Building GCC"
+echo "Building stage 1 GCC"
 echo " "
 date
 echo " "
@@ -30,8 +31,8 @@ echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
 
-CFLAGS="-O2 -g"
-CXXFLAGS="-O2 -g"
+CFLAGS="-O2 -g3"
+CXXFLAGS="-O2 -g3"
 if [ "x$1" == "xdebug" ]; then
   CFLAGS="-g"
   CXXFLAGS="-g"
@@ -58,13 +59,15 @@ mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 echo " "
 
-rm -f $LOG/$PROG*.log
+rm -f $LOG/$PROG-*.log
 
 echo -n "  Configuring gcc stage 1"
 $SRC/configure --prefix $INSTALL	\
 	--target=$TARGET		\
-	--program-prefix=ubi32-elf-	\
-	--disable-multilib		\
+	--program-prefix=$PREFIX-	\
+	--enable-languages=c 		\
+	--enable-multilib		\
+	--disable-decimal-float		\
 	--disable-libssp 		\
 	--disable-libsanitizer 		\
 	--disable-tls 			\
@@ -75,26 +78,28 @@ $SRC/configure --prefix $INSTALL	\
 	--without-isl 			\
 	--without-cloog 		\
 	--disable-decimal-float 	\
-	--enable-languages=c 		\
 	--without-headers 		\
-	--without-newlib		\
+	--with-newlib			\
 	--disable-largefile 		\
 	--disable-nls 			\
 	--enable-checking=yes		\
+	--with-system-zlib		\
 	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
 echo -n "  Building gcc stage 1"
-make "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" all >& $LOG/$PROG-make.log
+make -j4 "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
 echo -n "  Installing gcc stage 1"
-make "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" install >& $LOG/$PROG-install.log
+make -j4 "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
+
+touch $BLD/$PROG/.build_complete
 
 echo " "
 echo -n "Finish: "

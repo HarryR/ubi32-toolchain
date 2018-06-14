@@ -1,12 +1,11 @@
 #!/bin/bash
 
 TOP=`pwd`
-SRC=$TOP/src/binutils
+SRC=$TOP/src/gcc
 BLD=$TOP/build
-INSTALL=$TOP/release
 INSTALL=$TOP/install
 LOG=$TOP/log
-PROG=binutils
+PROG=gcc
 TARGET=ubi32-none-elf
 PREFIX=ubi32-elf
 DATE=$(date +%Y-%m-%d)
@@ -15,11 +14,12 @@ PATH=/usr/local/bin:/usr/bin:/bin
 if [ -n "$GCC_PATH" ] ; then
   PATH=$GCC_PATH:$PATH
 fi
+PATH=$INSTALL/bin:$PATH
 
 echo " "
 echo "======================="
 echo " "
-echo "Building Binutils"
+echo "Building final GCC"
 echo " "
 date
 echo " "
@@ -31,9 +31,11 @@ echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
 
-CFLAGS="-O2 -g"
+CFLAGS="-O2 -g3"
+CXXFLAGS="-O2 -g3"
 if [ "x$1" == "xdebug" ]; then
   CFLAGS="-g"
+  CXXFLAGS="-g"
   echo "  Building debug version"
 fi
 
@@ -48,6 +50,7 @@ function check_rc
   fi
 }
 
+#rm -rf $INSTALL
 mkdir -p $INSTALL $LOG
 
 echo "  Removing $BLD/$PROG"
@@ -56,30 +59,48 @@ mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 echo " "
 
+export CFLAGS_FOR_TARGET="-g -O0"
+
 rm -f $LOG/$PROG-*.log
 
-echo -n "  Configuring binutils"
+# FIXME -- Enable libssp
+echo -n "  Configuring gcc final"
 $SRC/configure --prefix $INSTALL	\
 	--target=$TARGET		\
 	--program-prefix=$PREFIX-	\
+	--enable-languages=c		\
+	--enable-plugins		\
+	--disable-libssp		\
+	--enable-install-libbfd 	\
+	--enable-multilib		\
+	--disable-decimal-float		\
+	--disable-libmudflap 		\
+	--disable-threads 		\
+	--disable-libquadmath 		\
+	--disable-libgomp 		\
+	--disable-tls 			\
+	--without-isl 			\
+	--without-cloog 		\
+	--disable-decimal-float 	\
+	--with-headers 			\
+	--with-newlib			\
+	--disable-nls 			\
+	--enable-checking=yes		\
+	--with-system-zlib		\
 	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
-echo -n "  Building binutils"
-make -j4 "CFLAGS=$CFLAGS" all >& $LOG/$PROG-make.log
+echo -n "  Building gcc final"
+make -j4 "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
-echo -n "  Installing binutils"
-make -j4 "CFLAGS=$CFLAGS" install >& $LOG/$PROG-install.log
+echo -n "  Installing gcc final"
+make -j4 "CFLAGS=$CFLAGS" "CXXFLAGS=$CXXFLAGS" install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
-
-# Rename target directory
-#rm -rf $INSTALL/ubicom32-elf
-#cp -r $INSTALL/ubi32-elf-gnu $INSTALL/ubicom32-elf
 
 touch $BLD/$PROG/.build_complete
 

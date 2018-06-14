@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOP=`pwd`
-BUILD=$TOP/build/qemu
+BLD=$TOP/build
 SOURCE=$TOP/src/qemu
 INSTALL=$TOP/install
 LOG=$TOP/log
@@ -14,11 +14,11 @@ if [ -n "$GCC_PATH" ] ; then
   PATH=$GCC_PATH:$PATH
 fi
 
-
-mkdir -p $BUILD $LOG
-
-rm -f $BUILD/$PROG
+echo "  Removing $BLD/$PROG"
+rm -rf $BLD/$PROG
 rm -f $LOG/$PROG*.log
+
+mkdir -p $BLD/$PROG $LOG
 
 echo " "
 echo "======================="
@@ -28,7 +28,7 @@ echo " "
 date
 echo " "
 echo "Target:  $TARGET_LIST"
-echo "Build:   $BUILD"
+echo "Build:   $BLD"
 echo "Install: $INSTALL"
 echo "Log:     $LOG"
 echo "PATH:    $PATH"
@@ -40,8 +40,8 @@ if [ "x$1" == "xdebug" ]; then
   echo "  Building debug version"
 fi
 
+cd $BLD/$PROG
 echo "  Configuring QEMU"
-cd $BUILD
 $SOURCE/configure --prefix=$INSTALL 			\
 		  --with-pkgversion="$DATE" 		\
 		  --disable-curl 			\
@@ -69,14 +69,16 @@ rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
 echo "  Building QEMU"
-make V=1 "CFLAGS=$CFLAGS" > $LOG/$PROG-build.log 2>&1
+make -j4 V=1 "CFLAGS=$CFLAGS" > $LOG/$PROG-build.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 
 echo "  Installing QEMU"
-make V=1 "CFLAGS=$CFLAGS" install > $LOG/$PROG-install.log 2>&1
+make -j4 V=1 "CFLAGS=$CFLAGS" install > $LOG/$PROG-install.log 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
+
+touch $BLD/$PROG/.build_complete
 
 echo " "
 echo -n "QEMU build completed:  "
