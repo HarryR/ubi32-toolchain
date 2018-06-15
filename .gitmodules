@@ -17,3 +17,7 @@
 	path = src/gcc
 	url = https://source.codeaurora.org/external/ubicom/ubi32-gcc
 	branch = ubi32
+[submodule "src/newlib"]
+	path = src/newlib
+	url = https://source.codeaurora.org/external/ubicom/ubi32-newlib
+	branch = ubi32
