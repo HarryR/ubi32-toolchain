@@ -79,5 +79,5 @@ check_rc $rc
 touch $BLD/$PROG/.build_complete
 
 echo " "
-echo -n "Finish: "
+echo -n "  GDB done: "
 date

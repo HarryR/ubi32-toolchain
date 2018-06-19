@@ -81,7 +81,6 @@ if [ $rc -ne 0 ]; then echo "rc = $rc"; exit 1; fi
 touch $BLD/$PROG/.build_complete
 
 echo " "
-echo -n "QEMU build completed:  "
+echo -n "  QEMU done:  "
 date
 echo " "
-echo "======================="
