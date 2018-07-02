@@ -66,7 +66,7 @@ esac
 TODAY=`date "+%Y_%m_%d"`
 RESULTS=$TOP/results/$TODAY-$ARCH-$ENDIAN
 GCC=$TOP/install/bin/ubi32-elf-gcc
-DEJADIR=$(realpath ../ubicom32-toolchain/src/dejagnu)
+DEJADIR=/zfs/qualcomm/dev/ubicom32-toolchain/src/dejagnu
 TARGET_BOARD=ubicom32-qemu
 LDSCRIPT=$TOP/install/ubi32-none-elf/lib/ubi32-qemu.ld
 MAPFILE=$TOP/src/qemu/target-ubicom32/$MAPFILE
