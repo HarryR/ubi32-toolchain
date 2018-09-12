@@ -70,7 +70,7 @@ $SRC/configure --prefix $INSTALL	\
 	--program-prefix=$PREFIX-	\
 	--enable-languages=c		\
 	--enable-plugins		\
-	--disable-libssp		\
+	--enable-libssp		\
 	--enable-install-libbfd 	\
 	--enable-multilib		\
 	--disable-decimal-float		\
