@@ -39,9 +39,14 @@ export CXX_FOR_TARGET=${PREFIX}-g++
 
 CFLAGS="-O2 -g"
 CXXFLAGS="-O2 -g"
+export CFLAGS_FOR_TARGET="-O2 -g"
+export CFLAGS_FOR_BUILD="-O2 -g"
+
 if [ "x$1" == "xdebug" ]; then
   CFLAGS="-g"
   CXXFLAGS="-g"
+  CFLAGS_FOR_TARGET="-g"
+  CFLAGS_FOR_BUILD="-g"
   echo "  Building debug version"
 fi
 
@@ -64,9 +69,6 @@ rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 echo " "
-
-export CFLAGS_FOR_TARGET="-g -O0"
-export CFLAGS_FOR_BUILD="-g -O0"
 
 rm -f $LOG/$PROG-*.log
 
