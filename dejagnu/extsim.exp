@@ -1,0 +1,242 @@
+# Use external simulator
+
+load_lib gdb.exp
+
+proc gdb_target_sim { } {
+    global gdb_prompt
+
+    set target_sim_options "[board_info target gdb,target_sim_options]"
+
+    return -1
+}
+
+#
+# gdb_load -- load a file into the debugger.
+#             return a -1 if anything goes wrong.
+#
+proc gdb_load { arg } {
+    global verbose
+    global loadpath
+    global loadfile
+    global GDB
+    global gdb_prompt
+
+    gdb_file_cmd $arg
+
+    extsim_kill
+    extsim_run ""
+
+    send_gdb "load\n"
+    set timeout 10
+    verbose "Timeout is now $timeout seconds" 2
+    gdb_expect {
+	-re ".*your target is 'exec'.*$gdb_prompt" {
+	    verbose "Simulator configuration incorrect."
+	    return -1
+	}
+	-re ".*$gdb_prompt $" {
+	    if $verbose>1 then {
+		send_user "Loaded executable into simulator.\n"
+	    }
+	    return 0
+	}
+	-re "$gdb_prompt $"     {
+	    if $verbose>1 then {
+		perror "GDB couldn't load."
+	    }
+	}
+	timeout {
+	    if $verbose>1 then {
+		perror "Timed out trying to load executable."
+	    }
+	}
+    }
+    return -1
+}
+
+global portnum
+set portnum "2345"
+
+# Locate the external simulator binary.  Returns "" if it could not be found.
+
+proc find_extsim { } {
+  if [target_info exists extsim_prog] {
+    return [target_info extsim_prog]
+  }
+
+  set extsim "qemu-system"
+
+  if { [file executable $extsim] } {
+    return $extsim
+  }
+
+  return ""
+}
+
+# Start a simulator process with initial OPTIONS and trailing ARGUMENTS.
+# The port will be filled in between them automatically.
+#
+# Returns the target protocol and socket to connect to.
+
+proc extsim_spawn { options arguments } {
+    global portnum
+    global extsim_spawn_id
+
+    # Port id -- either specified in baseboard file, or managed here.
+    if [target_info exists gdb,socketport] {
+	set portnum [target_info gdb,socketport]
+    } else {
+	# Bump the port number to avoid conflicts with hung ports.
+	incr portnum
+    }
+
+    # Extract the local and remote host ids from the target board struct.
+    if [target_info exists sockethost] {
+	set debughost [target_info sockethost]
+    } else {
+	set debughost "localhost:"
+    }
+
+    # Extract the protocol
+    if [target_info exists gdb_protocol] {
+	set protocol [target_info gdb_protocol]
+    } else {
+	set protocol "remote"
+    }
+
+    # Export the host:port pair.
+    set gdbport "$debughost:$portnum"
+
+    if [info exists extsim_spawn_id] {
+      catch "close -i $extsim_spawn_id"
+      catch "wait -i $extsim_spawn_id"
+      unset extsim_spawn_id
+    }
+
+    set extsim [find_extsim]
+
+    # Fire off the debug agent.
+    set extsim_command "$extsim"
+    if [target_info exists extsim_options] {
+	append extsim_command " [target_info extsim_options]"
+    }
+    if { $options != "" } {
+	append extsim_command " $options"
+    }
+    append extsim_command "tcp::$portnum"
+
+    if [target_info exists extsim_filename] {
+      if { $arguments != "" } {
+	append extsim_command " $arguments"
+      }
+    }
+
+    set extsim_spawn_id [remote_spawn target $extsim_command]
+
+    set timeout 2
+    expect {
+      -i extsim_spawn_id
+      -re "FAILED" {
+	verbose "Failed to start simulator"
+	close -i $extsim_spawn_id
+	return ""
+      }
+      eof {
+	return ""
+      }
+      timeout {
+      }
+    }
+
+    return [list $protocol $gdbport]
+}
+
+proc extsim_kill { } {
+    global extsim_spawn_id
+    if [info exists extsim_spawn_id] {
+      catch "close -i $extsim_spawn_id"
+      catch "wait -i $extsim_spawn_id"
+      unset extsim_spawn_id
+    }
+} 
+  
+
+# Start a simulator process running HOST_EXEC and pass CHILD_ARGS
+# to it.  Return 0 on success, or non-zero on failure.
+
+proc extsim_run { child_args } {
+    global gdbserver_protocol
+    global gdbserver_gdbport
+
+    global extsim_spawn_id
+    if [info exists extsim_spawn_id] {
+    }
+
+    set res [extsim_spawn $child_args ""]
+    set extsim_protocol [lindex $res 0]
+    set extsim_gdbport [lindex $res 1]
+    return [gdb_target_cmd $extsim_protocol $extsim_gdbport]
+}
+
+proc gdb_reload { } {
+     return 0
+}
+
+#
+# gdb_target_cmd
+# Send gdb the "target" command
+#
+proc gdb_target_cmd { targetname serialport } {
+    global gdb_prompt
+
+    for {set i 1} {$i <= 3} {incr i} {
+	send_gdb "target $targetname $serialport\n"
+	gdb_expect 20 {
+	    -re "Remote debugging using .*$gdb_prompt" {
+		return 1
+	    }
+	    -re "A program is being debugged already.*ill it.*y or n. $" {
+		send_gdb "y\n"
+		exp_continue
+	    }
+	    -re "unknown host.*$gdb_prompt" {
+	        verbose "Couldn't look up $serialport"
+	    }
+	    -re "Couldn't establish connection to remote.*$gdb_prompt $" {
+		verbose "Connection failed"
+	    }
+	    -re "Connected to.*$gdb_prompt $" { 
+		verbose "Set target to $targetname"
+		return 0
+	    }
+	    -re "Ending remote.*$gdb_prompt $" { }
+	    -re "Connection refused.*$gdb_prompt $" {
+		verbose "Connection refused by remote target.  Pausing, and trying again."
+		sleep 30
+		continue
+	    }
+	    -re "Timeout reading from remote system.*$gdb_prompt $" {
+		verbose "Got timeout error from gdb."
+	    }
+	    timeout {
+		verbose "Target remote command timed out."
+		send_gdb ""
+		break
+	    }
+	}
+    }
+    return 1
+}
+
+proc gdb_exit { } {
+    global gdb_prompt
+    global extsim_spawn_id
+
+    if [info exists extsim_spawn_id] {
+      catch "close -i $extsim_spawn_id"
+      catch "wait -i $extsim_spawn_id"
+      unset extsim_spawn_id
+    }
+
+    catch default_gdb_exit
+}

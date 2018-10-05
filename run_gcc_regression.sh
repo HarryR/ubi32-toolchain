@@ -66,11 +66,11 @@ esac
 TODAY=`date "+%Y_%m_%d"`
 RESULTS=$TOP/results/$TODAY-$ARCH-$ENDIAN
 GCC=$TOP/install/bin/ubi32-elf-gcc
-DEJADIR=/zfs/qualcomm/dev/ubicom32-toolchain/src/dejagnu
-TARGET_BOARD=ubicom32-qemu
+DEJAGNU=$TOP/dejagnu
+TARGET_BOARD=ubi32-qemu
 LDSCRIPT=$TOP/install/ubi32-none-elf/lib/ubi32-qemu.ld
 MAPFILE=$TOP/src/qemu/target-ubicom32/$MAPFILE
-RUNTEST=$DEJADIR/runtest
+RUNTEST=/usr/bin/runtest
 QEMU=$TOP/install/bin/$QEMU
 TESTDIR=$TOP/test
 SRCDIR=$TOP/src
@@ -101,8 +101,8 @@ set rootme ""
 set srcdir "$ROOTDIR"
 set host_triplet x86_64-unknown-linux-gnu
 set build_triplet x86_64-unknown-linux-gnu
-set target_triplet ubicom32-unknown-elf
-set target_alias ubicom32-elf
+set target_triplet ubi32-unknown-elf
+set target_alias ubi32-elf
 set libiconv ""
 set CFLAGS ""
 set CXXFLAGS ""
@@ -111,9 +111,9 @@ set HAVE_LIBSTDCXX_V3 1
 set tmpdir "$TESTDIR"
 set srcdir "$SRCDIR/gcc/gcc/testsuite"
 if ![info exists boards_dir] {
-    set boards_dir "$DEJADIR/baseboards"
+    set boards_dir "$DEJAGNU"
 }
-lappend boards_dir "$DEJADIR/baseboards"
+lappend boards_dir "$DEJAGNU"
 EOF
 
 touch $RESULTS/gcc.start
