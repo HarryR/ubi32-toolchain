@@ -2,6 +2,7 @@
 
 TOP=`pwd`
 BLD=$TOP/build
+SCRIPTS=$TOP/scripts
 
 echo " "
 echo "Building UBI32 tool chain"
@@ -78,11 +79,13 @@ if [ "$CLEAN" == "yes" ]; then
  fi
 fi
 
+# Check out or update sources
+$SCRIPTS/checkout.sh
 
 if [ -f $BLD/binutils/.build_complete ]; then
   echo "  Binutils already built"
 else
-  ./build_binutils.sh $OPTIONS
+  $SCRIPTS/build_binutils.sh $OPTIONS
   check_rc $?
 fi
 
@@ -93,21 +96,21 @@ else
     echo "  GCC stage 1 already built"
   else
     rm -f $BLD/gcc/.build_complete 
-    ./build_gcc_stage1.sh $OPTIONS
+    $SCRIPTS/build_gcc_stage1.sh $OPTIONS
     check_rc $?
   fi
 
   if [ -f $BLD/newlib/.build_complete ]; then
     echo "  Newlib already built"
   else
-    ./build_newlib.sh $OPTIONS
+    $SCRIPTS/build_newlib.sh $OPTIONS
     check_rc $?
   fi
 
   if [ -f $BLD/gcc/.build_complete ]; then
     echo "  GCC already built"
   else
-    ./build_gcc_final.sh $OPTIONS
+    $SCRIPTS/build_gcc_final.sh $OPTIONS
     check_rc $?
   fi
 fi
@@ -115,14 +118,14 @@ fi
 if [ -f $BLD/gdb/.build_complete ]; then
   echo "  GDB already built"
 else
-  ./build_gdb.sh $OPTIONS
+  $SCRIPTS/build_gdb.sh $OPTIONS
   check_rc $?
 fi
 
 if [ -f $BLD/qemu/.build_complete ]; then
   echo "  QEMU already built"
 else
-  ./build_qemu.sh $OPTIONS
+  $SCRIPTS/build_qemu.sh $OPTIONS
   check_rc $?
 fi
 
