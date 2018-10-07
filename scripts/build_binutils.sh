@@ -3,10 +3,12 @@
 TOP=`pwd`
 SRC=$TOP/src/binutils
 BLD=$TOP/build
-INST=$TOP/release
+INSTALL=$TOP/release
+INSTALL=$TOP/install
 LOG=$TOP/log
 PROG=binutils
-TARGET=ubi32-elf-gnu
+TARGET=ubi32-none-elf
+PREFIX=ubi32-elf
 DATE=$(date +%Y-%m-%d)
 
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -24,7 +26,7 @@ echo " "
 echo "Target:  $TARGET"
 echo "Source:  $SRC"
 echo "Build:   $BLD"
-echo "Install: $INST"
+echo "Install: $INSTALL"
 echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
@@ -46,8 +48,7 @@ function check_rc
   fi
 }
 
-#rm -rf $INST
-mkdir -p $INST $LOG
+mkdir -p $INSTALL $LOG
 
 echo "  Removing $BLD/$PROG"
 rm -rf  $BLD/$PROG
@@ -55,31 +56,33 @@ mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 echo " "
 
-rm -f $LOG/$PROG*.log
+rm -f $LOG/$PROG-*.log
 
 echo -n "  Configuring binutils"
-$SRC/configure --prefix $INST	\
+$SRC/configure --prefix $INSTALL	\
 	--target=$TARGET		\
-	--program-prefix=ubicom32-elf-	\
+	--program-prefix=$PREFIX-	\
 	--with-pkgversion="$DATE" 	\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
 
 echo -n "  Building binutils"
-make "CFLAGS=$CFLAGS" all >& $LOG/$PROG-make.log
+make -j4 "CFLAGS=$CFLAGS" all >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
 echo -n "  Installing binutils"
-make "CFLAGS=$CFLAGS" install >& $LOG/$PROG-install.log
+make -j4 "CFLAGS=$CFLAGS" install >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
 
 # Rename target directory
-rm -rf $INST/ubicom32-elf
-cp -r $INST/ubi32-elf-gnu $INST/ubicom32-elf
+#rm -rf $INSTALL/ubicom32-elf
+#cp -r $INSTALL/ubi32-elf-gnu $INSTALL/ubicom32-elf
+
+touch $BLD/$PROG/.build_complete
 
 echo " "
-echo -n "Finish: "
+echo -n "  Binutils done: "
 date

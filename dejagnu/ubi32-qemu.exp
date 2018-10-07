@@ -1,0 +1,38 @@
+# Board configuration for Ubi32 running on QEMU
+
+# Set configuration options
+source target_config.exp
+
+# List of toolchains 
+set_board_info target_install {ubi32}
+
+# Load the generic configuration for this board, This will define a basic
+# set of routines needed by the tool to communicate with the board.
+load_generic_config "sim"
+
+load_base_board_description "basic-sim"
+
+# No multilib flags needed by default.
+process_multilib_options ""
+
+# The compiler used to build for this board. This has *nothing* to do
+# with what compiler is tested if we're testing gcc.
+set_board_info compiler  "ubi32-elf-gcc"
+set_board_info cflags  $target_config_cflags
+set_board_info ldflags $target_config_ldflags
+
+# Target
+set_board_info sim $target_config_sim
+set_board_info sim,options $target_config_sim_flags
+
+set_board_info sim_time_limit 120           ;# We cannot wait much longer
+
+# No support for signals on this target.
+set_board_info gdb,nosignals 1;
+
+# Can't call functions from GDB.
+set_board_info gdb,cannot_call_functions 1
+
+# No trampoline support in GCC
+set_board_info gcc,no_trampolines 1
+

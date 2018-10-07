@@ -1,5 +1,6 @@
 *.swp
-build*
+build
+build-*/
 install*
 log*
 binutils-cpu
@@ -12,3 +13,4 @@ release*
 log*
 save
 results
+test

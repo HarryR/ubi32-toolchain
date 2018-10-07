@@ -1,0 +1,49 @@
+# Board configuration for Ubi32 using QEMU
+
+load_generic_config "extsim"
+
+set_board_info target_install {ubi32-elf}
+
+# Set program which provides remote protocol
+set_board_info extsim_prog "qemu-system-ubicom32el"
+
+set_board_info extsim_options "-machine ubicom32 -semihosting -readconfig akronite.mapfile -S -gdb "
+
+set board_info(ubi32-elf-gdb,isremote) 0
+
+# Skip watchpoint tests
+push_config (gdb, no_hardware_watchpoints) 
+push_config (gdb, no_watchpoints) 
+
+# Library options
+process_multilib_options ""
+
+# The default compiler for this target.
+set_board_info compiler  "ubi32-elf-gcc"
+
+# Use the standard GDB remote protocol
+set_board_info gdb_protocol "remote"
+
+# Connect to QEMU on localhost
+set_board_info sockethost "localhost"
+
+# Port ID to use for socket connection
+set_board_info gdb,socketport "1234"
+
+# Port for target
+set_board_info netport "localhost:1234"
+
+# Use techniques appropriate to a stub (don't do "run" command)
+set_board_info use_gdb_stub 1
+
+# Don't pass arguments.
+set_board_info noargs 1
+
+# I/O is not returned to gdb
+set_board_info gdb,noinferiorio 1
+
+# FIXME: move into target_config.exp and load in script
+set_board_info cflags  "-march=ubi32v61 -mlittle-endian -msemihosting -Tubi32-qemu.ld"
+
+set tool_timeout 60
+

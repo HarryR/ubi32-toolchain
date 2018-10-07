@@ -3,10 +3,10 @@
 TOP=`pwd`
 SRC=$TOP/src/gdb
 BLD=$TOP/build
-INST=$TOP/install
+INSTALL=$TOP/install
 LOG=$TOP/log
 PROG=gdb
-TARGET=ubi32-elf-gnu
+TARGET=ubi32-none-elf
 NAME=ubi32-elf
 PATH=/usr/local/bin:/usr/bin:/bin
 if [ -n "$GCC_PATH" ] ; then
@@ -16,16 +16,26 @@ DATE=$(date +%Y-%m-%d)
 
 
 echo " "
+echo "======================="
+echo " "
 echo "Building GDB"
+echo " "
+date
+echo " "
 echo "Target:  $TARGET"
 echo "Source:  $SRC"
 echo "Build:   $BLD"
-echo "Install: $INST"
+echo "Install: $INSTALL"
 echo "Log:     $LOG"
 echo "PATH:    $PATH"
 echo " "
 echo -n "Start: "
-date
+
+CFLAGS="-O2 -g"
+if [ "x$1" == "xdebug" ]; then
+  CFLAGS="-g"
+  echo "  Building debug version"
+fi
 
 function check_rc
 {
@@ -37,16 +47,17 @@ function check_rc
   fi
 }
 
-mkdir -p $INST $LOG
+mkdir -p $INSTALL $LOG
 
+echo "  Removing $BLD/$PROG"
 rm -rf  $BLD/$PROG
 mkdir -p $BLD/$PROG
 cd $BLD/$PROG
 
 rm -f $LOG/$PROG*.log
 
-echo -n "Configuring gdb"
-$SRC/configure --prefix $INST		\
+echo -n "  Configuring gdb"
+$SRC/configure --prefix $INSTALL	\
 	--with-pkgversion="$DATE" 	\
 	--target=$TARGET		\
 	--program-prefix=ubi32-elf-	\
@@ -55,16 +66,18 @@ $SRC/configure --prefix $INST		\
 rc=$?
 check_rc $rc
 
-echo -n "Building gdb"
-make CFLAGS=-ggdb all-gdb >& $LOG/$PROG-make.log
+echo -n "  Building gdb"
+make -j4 CFLAGS=-ggdb all-gdb >& $LOG/$PROG-make.log
 rc=$?
 check_rc $rc
 
-echo -n "Installing gdb"
-make install-gdb >& $LOG/$PROG-install.log
+echo -n "  Installing gdb"
+make -j4 install-gdb >& $LOG/$PROG-install.log
 rc=$?
 check_rc $rc
+
+touch $BLD/$PROG/.build_complete
 
 echo " "
-echo -n "Finish: "
+echo -n "  GDB done: "
 date
