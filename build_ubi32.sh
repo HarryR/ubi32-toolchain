@@ -22,6 +22,7 @@ function usage {
   echo "    gdb     -- (Re)build GDB"
   echo "    newlib  -- (Re)build Newlib and GCC"
   echo "    qemu    -- (Re)build QEMU"
+  echo "    update  -- Update tool chain"
   echo "    help    -- Print this help message"
   echo ""
 }
@@ -59,6 +60,8 @@ for opt in "$@"; do
 		;;
     'qemu')	rm -f $BLD/qemu/.build_complete
 		;;
+    'update')	UPDATE=update
+		;;
     *)		HELP=yes
 		echo "Error: option $opt not recognized"
 		;;
@@ -79,8 +82,8 @@ if [ "$CLEAN" == "yes" ]; then
  fi
 fi
 
-# Check out or update sources
-$SCRIPTS/checkout.sh
+echo "Verifying source directories"
+$SCRIPTS/checkout.sh $UPDATE
 
 if [ -f $BLD/binutils/.build_complete ]; then
   echo "  Binutils already built"

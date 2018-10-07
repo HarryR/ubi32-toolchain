@@ -2,6 +2,13 @@
 
 TOP=`pwd`
 
+UPDATE=$1
+
+# Update top level directory
+  if [ "$UPDATE" = "update" ]; then
+    git pull > /dev/null
+  fi
+
 mkdir -p src
 
 #  List of repos to check out
@@ -20,14 +27,18 @@ while [ ! "${repolist[i]}" = "DONE" ]; do
   dir="${elem[0]}"
   URL="${elem[1]}"
   branch="${elem[2]}"
+  if [[ -d src/$dir && -z "$(ls -A src/$dir)" ]]; then
+    rm -rf src/$dir
+  fi
   if [ ! -d src/$dir ]; then 
-    echo "git clone --branch $branch --single-branch $URL src/$dir"
     git clone --branch $branch --single-branch $URL src/$dir
   else
-    echo "git checkout $branch"
-    git checkout $branch
-    echo "git pull"
-    git pull
+    pushd src/$dir > /dev/null
+    git checkout $branch 2> /dev/null
+    if [ "$UPDATE" = "update" ]; then
+      git pull > /dev/null
+    fi
+    popd > /dev/null
   fi
   i=$((i + 1))
 done
