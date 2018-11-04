@@ -15,6 +15,7 @@ function usage {
   echo ""
   echo "  Options:"
   echo "    binutils-- (Re)build Binutils"
+  echo "    check   -- Check source status"
   echo "    clean   -- Delete current build, install, log directories"
   echo "    debug   -- Build debug versions of tool chain"
   echo "    gcc     -- (Re)build Final GCC"
@@ -43,6 +44,8 @@ for opt in "$@"; do
 		;;
     'clean')	CLEAN=yes
 		;;
+    'check')	CHECK=yes
+		;;
     'debug')	OPTIONS=debug
 		;;
     'help')	HELP=yes
@@ -61,6 +64,7 @@ for opt in "$@"; do
     'qemu')	rm -f $BLD/qemu/.build_complete
 		;;
     'update')	UPDATE=update
+    		CHECK=yes
 		;;
     *)		HELP=yes
 		echo "Error: option $opt not recognized"
@@ -82,8 +86,10 @@ if [ "$CLEAN" == "yes" ]; then
  fi
 fi
 
-echo "Verifying source directories"
-$SCRIPTS/checkout.sh $UPDATE
+if [ "$CHECK" == "yes" ]; then
+  echo "Verifying source directories"
+  $SCRIPTS/checkout.sh $UPDATE
+fi
 
 if [ -f $BLD/binutils/.build_complete ]; then
   echo "  Binutils already built"
