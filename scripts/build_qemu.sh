@@ -63,6 +63,7 @@ $SOURCE/configure --prefix=$INSTALL 			\
 		  --enable-debug			\
 		  --disable-strip			\
 		  --sysroot=$SYSROOT			\
+		  --disable-docs			\
 		  --target-list="$TARGET_LIST" 		\
 			> $LOG/$PROG-configure.log 2>&1
 rc=$?

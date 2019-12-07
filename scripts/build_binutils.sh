@@ -63,6 +63,7 @@ $SRC/configure --prefix $INSTALL	\
 	--target=$TARGET		\
 	--program-prefix=$PREFIX-	\
 	--with-pkgversion="$DATE" 	\
+	--disable-werror		\
 	>& $LOG/$PROG-configure.log
 rc=$?
 check_rc $rc
